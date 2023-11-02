@@ -23,8 +23,6 @@ return(
     const handleForm = ()=> {
       setShowFormModal((showFormModal) => !showFormModal)
     }
-
-
   return (
     <div>
          <Button onClick={handleForm}> Show Form </Button>

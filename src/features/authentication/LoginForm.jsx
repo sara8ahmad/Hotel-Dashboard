@@ -45,7 +45,7 @@ function LoginForm() {
         />
       </FormRowVertical>
       <FormRowVertical>
-        <Button size="large">{!isLoading? "login": <SpinnerMini />}</Button>
+        <Button sizes="medium" variations = 'primary' >{!isLoading? "login": <SpinnerMini />}</Button>
       </FormRowVertical>
     </Form>
   );

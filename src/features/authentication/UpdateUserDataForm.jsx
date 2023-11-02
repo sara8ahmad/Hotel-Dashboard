@@ -7,6 +7,7 @@ import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
 
 import { useUser } from "./useUser";
+import { useUpdatedUser } from "./useUpdatedUser";
 
 function UpdateUserDataForm() {
   // We don't need the loading state, and can immediately use the user data, because we know that it has already been loaded at this point
@@ -17,11 +18,21 @@ function UpdateUserDataForm() {
     },
   } = useUser();
 
+  const {updatedUser , isUpdating} = useUpdatedUser();
+
   const [fullName, setFullName] = useState(currentFullName);
   const [avatar, setAvatar] = useState(null);
+  
 
   function handleSubmit(e) {
     e.preventDefault();
+    if(!fullName) return;
+    updatedUser({fullName , avatar})
+  }
+
+  function handleCancel (){
+    setFullName(currentFullName)
+    setAvatar(null)
   }
 
   return (
@@ -45,10 +56,10 @@ function UpdateUserDataForm() {
         />
       </FormRow>
       <FormRow>
-        <Button type="reset" variation="secondary">
+        <Button sizes = 'medium' type="reset" variations="secondary" onClick={handleCancel} disabled={isUpdating}>
           Cancel
         </Button>
-        <Button>Update account</Button>
+        <Button sizes = 'medium' disabled={isUpdating}>Update account</Button>
       </FormRow>
     </Form>
   );

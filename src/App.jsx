@@ -2,7 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import {
   QueryClient,
   QueryClientProvider,
-  useQuery,
+  
 } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import {Toaster} from 'react-hot-toast';
@@ -54,28 +54,28 @@ function App() {
         </Routes>
       </BrowserRouter>
 
-<Toaster
-  position="top-center"
-  reverseOrder={false}
-  gutter={12}
-  containerStyle={{margin: "8px"}}
-  toastOptions={{
+      <Toaster
+          position="top-center"
+          reverseOrder={false}
+          gutter={12}
+          containerStyle={{margin: "8px"}}
+          toastOptions={{
     // Define default options
-    className: '',
-    duration: 5000,
+          className: '',
+          duration: 5000,
     // Default options for specific types
-    success: {
-      duration: 3000,
-    },
-    error:{
-      duration: 5000,
-    },
-    style: {
-      backgroundColor: 'var(--color-grey-0)',
-      color: 'var(--color-grey-700)',
-      padding:"16px 24px",
-      maxWidth:'500px',
-      fontSize:'16px',
+        success: {
+          duration: 3000,
+         },
+        error:{
+          duration: 5000,
+         },
+        style: {
+         backgroundColor: 'var(--color-grey-0)',
+         color: 'var(--color-grey-700)',
+         padding:"16px 24px",
+         maxWidth:'500px',
+         fontSize:'16px',
 
     },
 

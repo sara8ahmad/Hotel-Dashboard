@@ -64,7 +64,7 @@ const CabinRow = ({cabin}) => {
         <Modal.Open opens = 'delete'>
         <Button variations="danger" sizes='small'>delete</Button>
         </Modal.Open>
-        <Modal.Window name = 'delete'>
+        <Modal.Window Name = 'delete'>
           <ConfirmDelete onConfirm={()=> deletingCabin(id)} disabled={isDeleting} resourceName={'Cabin'} />
         </Modal.Window>
       </Modal>

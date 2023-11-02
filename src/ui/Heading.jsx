@@ -10,7 +10,10 @@ const Heading = styled.h1`
     props.as === "h1" &&
     css`
       font-size: 3rem;
-      font-weight: 600;
+      font-family: 'monospace';
+      letter-spacing: 3px;
+      font-weight: 400;
+      color: #949799;
     `}
 
   ${(props) =>

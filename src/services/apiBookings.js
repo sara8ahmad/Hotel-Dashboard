@@ -1,5 +1,44 @@
+import { PAGE_SIZE } from "../utils/constants";
 import { getToday } from "../utils/helpers";
 import supabase from "./supabase";
+
+
+// we can not useSearchPramas here as it is not a react component it is a function so we write the logic in the useBooking hook
+
+export async function getBookings({filter , sortBy , page}) {
+ 
+  let query = 
+    supabase
+    .from("Bookings")
+    .select("id ,created_at,startDate,endDate,NumNights,numGuests,totalPrice,status,Gests(fullName , email),Cabins(name)" , {count : 'exact'});
+
+  if(filter){
+    query = query.eq(filter.field , filter.value)
+  }
+ 
+  if(sortBy){
+    query = query.order(sortBy.field , {ascending : sortBy.direction === "asc"})
+  }
+
+  if(page){
+    const from = PAGE_SIZE * (page-1); 
+    const to =  from + PAGE_SIZE - 1 ;
+    query = query.range(from , to) 
+  }
+
+    const { data, error , count } = await query;
+
+
+  if (error) {
+    console.error(error);
+    throw new Error("Booking Can not be Loaded");
+  }
+
+  return{data ,count} ;
+}
+
+
+
 
 export async function getBooking(id) {
   const { data, error } = await supabase
@@ -19,7 +58,7 @@ export async function getBooking(id) {
 // Returns all BOOKINGS that are were created after the given date. Useful to get bookings created in the last 30 days, for example.
 export async function getBookingsAfterDate(date) {
   const { data, error } = await supabase
-    .from("bookings")
+    .from("Bookings")
     .select("created_at, totalPrice, extrasPrice")
     .gte("created_at", date)
     .lte("created_at", getToday({ end: true }));
@@ -35,9 +74,9 @@ export async function getBookingsAfterDate(date) {
 // Returns all STAYS that are were created after the given date
 export async function getStaysAfterDate(date) {
   const { data, error } = await supabase
-    .from("bookings")
+    .from("Bookings")
     // .select('*')
-    .select("*, guests(fullName)")
+    .select("*, Gests(fullName)")
     .gte("startDate", date)
     .lte("startDate", getToday());
 
@@ -52,8 +91,8 @@ export async function getStaysAfterDate(date) {
 // Activity means that there is a check in or a check out today
 export async function getStaysTodayActivity() {
   const { data, error } = await supabase
-    .from("bookings")
-    .select("*, guests(fullName, nationality, countryFlag)")
+    .from("Bookings")
+    .select("*, Gests(fullName, nationality, countryFlag)")
     .or(
       `and(status.eq.unconfirmed,startDate.eq.${getToday()}),and(status.eq.checked-in,endDate.eq.${getToday()})`
     )

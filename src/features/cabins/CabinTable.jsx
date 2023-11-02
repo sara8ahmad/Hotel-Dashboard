@@ -1,10 +1,9 @@
 import styled from "styled-components";
 import Spinner from '../../ui/Spinner';
-import { useQuery } from "@tanstack/react-query";
-import { getCabins } from "../../services/apiCabins";
-import Row from "../../ui/Row";
 import CabinRow from "./CabinRow";
 import Table from "../../ui/Table";
+import { useSearchParams } from "react-router-dom";
+import { useCabin } from "./useCabin";
 
 
 /*
@@ -37,12 +36,30 @@ const TableHeader = styled.header`
 
 const CabinTable = () => {
   
-  const {isLoading , data : cabins , error} = useQuery({
-    queryKey: ['cabins'],
-    queryFn: getCabins,
-  })
+  const {isLoading , cabins , error} = useCabin();
 
+  // Filter
+
+  const [searchParams] = useSearchParams();
+  const filteredValue = searchParams.get('discount') || 'all';
+
+  
   if(isLoading) return <Spinner />
+
+  let filteredCabins;
+  if(filteredValue === 'all') filteredCabins = cabins;
+  if(filteredValue === 'no-discount') filteredCabins = cabins.filter((cabin) => cabin.discount === 0); 
+  if(filteredValue === 'with-discount') filteredCabins = cabins.filter((cabin) => cabin.discount > 0);
+
+  // Sort 
+
+  const sortBy = searchParams.get("sortBy") || "name-asce";
+  const [field, direction] = sortBy.split("-");
+  console.log(field , direction)
+
+  const modifier = direction === 'asce' ? 1 : -1;
+  const sortedCabins = filteredCabins.sort((a,b) => (a[field] - b[field]) * modifier)
+  console.log(sortedCabins)
   
   return (
     <Table role='row' columns='0.6fr 1.8fr 2.2fr 1fr 1fr 1fr'>
@@ -55,7 +72,7 @@ const CabinTable = () => {
         <div></div>
       </TableHeader>
 
-      <Table.Body data={cabins} render={ (cabin) => <CabinRow cabin = {cabin} key={cabin.id}/> } />
+      <Table.Body data={sortedCabins} render={ (cabin) => <CabinRow cabin = {cabin} key={cabin.id}/> } />
         
     </Table>
   )

@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { useSearchParams } from "react-router-dom";
 
 const StyledFilter = styled.div`
   border: 1px solid var(--color-grey-100);
@@ -13,7 +14,7 @@ const StyledFilter = styled.div`
 const FilterButton = styled.button`
   background-color: var(--color-grey-0);
   border: none;
-
+    
   ${(props) =>
     props.active &&
     css`
@@ -33,3 +34,36 @@ const FilterButton = styled.button`
     color: var(--color-brand-50);
   }
 `;
+
+
+const Filter = ({filteredField , options}) => {
+ 
+  let [searchParams ,setSearchParams] = useSearchParams();
+
+  /* 
+  
+  In the case of a button, the  event.target.value  approach is typically used
+   with select elements or input elements that have a  value  attribute. Buttons, 
+  on the other hand, do not have a  value  attribute by default. 
+ 
+  If you are using buttons for filtering, you can pass the desired value directly to 
+  the handleClick function without relying on  event.target.value.
+
+ */
+
+  const handleClick = (value) => {
+       searchParams.set(filteredField , value);
+       setSearchParams(searchParams);
+  }
+  const currentvalue = searchParams.get(filteredField) || options[0]
+    
+  return (
+    <StyledFilter>
+       {options.map((option) => (<FilterButton key={option.value}
+       onClick={() => handleClick(option.value)}  active = {option.value === currentvalue}>{option.label}</FilterButton>))}
+    </StyledFilter>
+
+  )
+}
+
+export default Filter
